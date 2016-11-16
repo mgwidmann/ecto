@@ -693,6 +693,12 @@ defmodule Ecto.ChangesetTest do
     assert changeset.errors == []
     assert changeset.validations == [title: {:length, [min: 3, max: 7]}]
 
+    # Brand new record without any changes
+    changeset = changeset(%{}) |> validate_length(:title, min: 3, max: 7)
+    refute changeset.valid?
+    assert changeset.errors == [title: {"should be at least %{count} character(s)", [count: 3, validation: :length, min: 3]}]
+    assert changeset.validations == [title: {:length, [min: 3, max: 7]}]
+
     changeset = changeset(%{"title" => "world"}) |> validate_length(:title, min: 5, max: 5)
     assert changeset.valid?
 
